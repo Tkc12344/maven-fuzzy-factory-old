@@ -10,7 +10,7 @@ client/.vite
 k8s
 README.md
 *.csv
-warehouse
+/warehouse
 *.parquet
 *.duckdb
 *.duckdb.wal

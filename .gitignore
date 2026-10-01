@@ -5,7 +5,7 @@ dist
 *.log
 client/.vite
 k8s/secret.yaml
-warehouse
+/warehouse/
 *.parquet
 *.duckdb
 *.duckdb.wal

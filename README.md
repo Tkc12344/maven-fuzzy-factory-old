@@ -62,7 +62,7 @@ LLM and SerpAPI keys are optional. Without them, insights use the warehouse heur
 5. **Automation** — `node-cron` evaluates rules, persists `fired / acknowledged / resolved` in `warehouse/alerts.json`, and can POST to Slack, Teams, or an email webhook. Cooldown stops daily duplicates.
 6. **API** — `/api/v1/...` (unversioned `/api/...` still aliases). Zod, ETag / Cache-Control, helmet, rate limits, CORS allowlist, optional `API_TOKEN`.
 7. **Ops** — multi-stage image, non-root, CSVs not in the image, volume-mounted data, startupProbe, `readOnlyRootFilesystem`. No HPA while you still run one writer for alert state.
-8. **Hygiene** — data-contract tests (32,313 orders, $1,938,510 revenue), engine unit tests, GitHub Actions (lint, test, image, Trivy, push), pino + request IDs + Prometheus.
+8. **Hygiene** — data-contract tests (32,313 orders, $1,938,510 revenue), engine unit tests, GitHub Actions (`CI`: lint, test, client build, Docker image, Trivy, push to GHCR), pino + request IDs + Prometheus.
 
 ## Docker
 
