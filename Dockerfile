@@ -1,15 +1,20 @@
 # syntax=docker/dockerfile:1.7
-FROM node:22.14.0-bookworm-slim AS client
+FROM node:22-bookworm-slim AS client
 WORKDIR /app/client
 COPY client/package.json client/package-lock.json ./
 RUN npm ci
 COPY client ./
 RUN npm run build
 
-FROM node:22.14.0-bookworm-slim AS server
+FROM node:22-bookworm-slim AS server
 WORKDIR /app
+RUN apt-get update \
+  && apt-get upgrade -y --no-install-recommends \
+  && rm -rf /var/lib/apt/lists/*
 COPY server/package.json server/package-lock.json ./server/
-RUN cd server && npm ci --omit=dev
+RUN cd server && npm ci --omit=dev \
+  && npm cache clean --force \
+  && rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
 COPY server ./server
 COPY --from=client /app/client/dist ./client/dist
 
