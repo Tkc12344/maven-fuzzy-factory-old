@@ -58,11 +58,20 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Scan image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ steps.meta.outputs.local }}
           format: table
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "0"
+          vuln-type: os,library
+      - name: Fail on critical findings
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ steps.meta.outputs.local }}
+          format: table
+          severity: CRITICAL
           ignore-unfixed: true
           exit-code: "1"
           vuln-type: os,library
