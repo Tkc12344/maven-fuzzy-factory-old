@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mff
+  namespace: maven-fuzzy-factory
+  labels:
+    app: maven-fuzzy-factory
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maven-fuzzy-factory
+  template:
+    metadata:
+      labels:
+        app: maven-fuzzy-factory
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: app
+          image: maven-fuzzy-factory:latest
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - containerPort: 4000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: mff-config
+            - secretRef:
+                name: mff-secrets
+                optional: true
+          resources:
+            requests:
+              cpu: "250m"
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              readOnly: true
+            - name: warehouse
+              mountPath: /var/lib/mff/warehouse
+            - name: tmp
+              mountPath: /tmp
+          startupProbe:
+            httpGet:
+              path: /api/v1/health
+              port: http
+            periodSeconds: 5
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: http
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /api/v1/ready
+              port: http
+            periodSeconds: 5
+            failureThreshold: 12
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mff-data
+        - name: warehouse
+          persistentVolumeClaim:
+            claimName: mff-warehouse
+        - name: tmp
+          emptyDir: {}

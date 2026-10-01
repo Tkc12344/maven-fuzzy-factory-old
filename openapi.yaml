@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Maven Fuzzy Factory Intelligence API
+  version: 1.0.0
+  description: Versioned JSON API over a DuckDB warehouse built from Maven Fuzzy Factory CSVs.
+servers:
+  - url: http://localhost:4000
+paths:
+  /api/v1/health:
+    get:
+      summary: Liveness
+      responses:
+        "200":
+          description: Process is up
+  /api/v1/ready:
+    get:
+      summary: Readiness
+      responses:
+        "200":
+          description: Warehouse is queryable
+        "503":
+          description: ETL or DuckDB still loading
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      responses:
+        "200":
+          description: Prometheus text
+  /api/v1/kpis:
+    get:
+      summary: Shared KPI block (conversion, AOV, margin, refund rate)
+      security: [{ ApiKey: [] }]
+      responses:
+        "200":
+          description: KPIs plus trailing-year trend
+  /api/v1/analysis:
+    get:
+      summary: Full warehouse analysis
+      security: [{ ApiKey: [] }]
+      responses:
+        "200":
+          description: Monthly, product, channel, funnel tables
+  /api/v1/forecasts:
+    get:
+      summary: STL scenario through 2030 with intervals and backtest
+      security: [{ ApiKey: [] }]
+      responses:
+        "200":
+          description: Forecast payload
+  /api/v1/anomalies:
+    get:
+      summary: STL + MAD anomalies
+      security: [{ ApiKey: [] }]
+      responses:
+        "200":
+          description: Flagged months
+  /api/v1/insights:
+    get:
+      summary: LLM narrative over structured metrics
+      security: [{ ApiKey: [] }]
+      parameters:
+        - in: query
+          name: refresh
+          schema: { type: string, enum: ["0", "1"] }
+      responses:
+        "200":
+          description: Insights
+  /api/v1/research:
+    get:
+      summary: SerpAPI market search
+      security: [{ ApiKey: [] }]
+      parameters:
+        - in: query
+          name: refresh
+          schema: { type: string, enum: ["0", "1"] }
+      responses:
+        "200":
+          description: Search results
+  /api/v1/alerts:
+    get:
+      summary: Persisted automation alerts
+      security: [{ ApiKey: [] }]
+      responses:
+        "200":
+          description: Alert list
+  /api/v1/alerts/{id}/ack:
+    post:
+      summary: Acknowledge an alert
+      security: [{ ApiKey: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Updated alert
+  /api/v1/alerts/{id}/resolve:
+    post:
+      summary: Resolve an alert
+      security: [{ ApiKey: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Updated alert
+  /api/v1/report:
+    get:
+      summary: Latest automation report
+      security: [{ ApiKey: [] }]
+      responses:
+        "200":
+          description: Report
+  /api/v1/dashboard:
+    get:
+      summary: Overview payload
+      security: [{ ApiKey: [] }]
+      responses:
+        "200":
+          description: Dashboard
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: x-api-key

@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mff
+  namespace: maven-fuzzy-factory
+spec:
+  rules:
+    - host: fuzzy-factory.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mff
+                port:
+                  name: http

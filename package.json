@@ -1,0 +1,20 @@
+{
+  "name": "maven-fuzzy-factory",
+  "private": true,
+  "description": "Maven Fuzzy Factory intelligence platform — React dashboard, Node API, DuckDB warehouse, data/AI/automation engines",
+  "scripts": {
+    "install:all": "npm install --prefix server && npm install --prefix client",
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix client",
+    "start": "NODE_ENV=production npm run start --prefix server",
+    "etl": "npm run etl --prefix server",
+    "test": "npm test --prefix server",
+    "lint": "npm run lint --prefix server",
+    "docker:build": "docker build -t maven-fuzzy-factory:latest .",
+    "docker:up": "docker compose up --build",
+    "k8s:apply": "kubectl apply -k k8s"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

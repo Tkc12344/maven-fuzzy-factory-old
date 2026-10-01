@@ -1,0 +1,43 @@
+services:
+  app:
+    build: .
+    image: maven-fuzzy-factory:latest
+    ports:
+      - "4000:4000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      DATA_DIR: /data
+      WAREHOUSE_DIR: /var/lib/mff/warehouse
+      CLIENT_DIR: /app/client/dist
+    read_only: true
+    tmpfs:
+      - /tmp
+    volumes:
+      - type: bind
+        source: .
+        target: /data
+        read_only: true
+      - type: volume
+        source: mff-warehouse
+        target: /var/lib/mff/warehouse
+    security_opt:
+      - "no-new-privileges:true"
+    mem_limit: 1g
+    cpus: "1.0"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:4000/api/v1/ready').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+volumes:
+  mff-warehouse: {}

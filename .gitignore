@@ -1,0 +1,13 @@
+node_modules
+dist
+.env
+.DS_Store
+*.log
+client/.vite
+k8s/secret.yaml
+warehouse
+*.parquet
+*.duckdb
+*.duckdb.wal
+.idea
+.vscode

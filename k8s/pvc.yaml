@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mff-data
+  namespace: maven-fuzzy-factory
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mff-warehouse
+  namespace: maven-fuzzy-factory
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi

@@ -1,0 +1,17 @@
+node_modules
+client/node_modules
+server/node_modules
+client/dist
+client/.vite
+.git
+.env
+*.log
+.DS_Store
+k8s
+README.md
+*.csv
+warehouse
+*.parquet
+*.duckdb
+*.duckdb.wal
+.github
